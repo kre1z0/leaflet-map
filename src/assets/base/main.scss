@@ -1,0 +1,49 @@
+@import "./colors.scss";
+@import "./leaflet";
+@import "./marker-cluster";
+
+:global {
+  html {
+    box-sizing: border-box;
+    font-family: FedraSans, 'sans-serif';
+    font-size: 14px;
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
+  *:focus {
+    outline: none;
+  }
+
+  html,
+  body,
+  #root,
+  .app-container {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  .app-container {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .root-container {
+      padding: 20px;
+      flex-wrap: wrap;
+      display: flex;
+    }
+
+    a,
+    button {
+      user-select: none;
+    }
+  }
+}
