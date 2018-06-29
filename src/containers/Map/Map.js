@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import fetchJsonp from "fetch-jsonp";
 import { Map as LeafletMap, TileLayer, Marker, Popup } from "react-leaflet";
+// https://leafletjs.com/reference-1.3.0.html
 import Leaflet from "leaflet";
 // https://github.com/YUzhva/react-leaflet-markercluster
 // https://github.com/Leaflet/Leaflet.markercluster#all-options
 import MarkerClusterGroup from "react-leaflet-markercluster";
 
 import Yarmarka from "../../assets/icons/Yarmarka.svg";
-import { data } from "../../assets/data/data";
 import cn from "classnames";
 
 import styles from "./Map.scss";
@@ -49,8 +49,12 @@ export class Map extends Component {
       });
   }
 
-  ggwp = e => {
-    console.info("--> onMarkerClick e", e);
+  onClusterClick = cluster => {
+    console.info("--> onClusterClick ggwp", cluster.getAllChildMarkers());
+  };
+
+  onMarkerClick = (marker, properties) => {
+    console.info("--> onMarkerClick ggwp", marker, properties);
   };
 
   render() {
@@ -77,22 +81,23 @@ export class Map extends Component {
           url="https://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1&layerType=nc"
         />
         <MarkerClusterGroup
-          onClusterClick={this.ggwp}
+          onClusterClick={this.onClusterClick}
+          onMarkerClick={this.onMarkerClick}
           zoomToBoundsOnClick={false}
         >
-          {features.map(({ id, geometry: { coordinates } }) => (
-            <Marker
-              key={id}
-              icon={iconPerson}
-              position={[coordinates[1], coordinates[0]]}
-            >
-              <Popup>
-                <div>
-                  A pretty CSS3 popup. <br /> Easily customizable.
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {features &&
+            features.map(({ id, geometry: { coordinates }, properties }) => (
+              <Marker
+                properties={properties}
+                key={id}
+                icon={iconPerson}
+                position={[coordinates[1], coordinates[0]]}
+              >
+                <Popup>
+                  <div>{properties.address}</div>
+                </Popup>
+              </Marker>
+            ))}
         </MarkerClusterGroup>
       </LeafletMap>
     );
