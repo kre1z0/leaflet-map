@@ -8,17 +8,24 @@ import Leaflet from "leaflet";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 
 import Yarmarka from "../../assets/icons/Yarmarka.svg";
+import YarmarkaSelected from "../../assets/icons/Yarmarka_selected.svg";
 import cn from "classnames";
 
 import styles from "./Map.scss";
 
 const apiUrl = "https://msp.everpoint.ru/";
 
-const iconPerson = new Leaflet.Icon({
-  iconUrl: Yarmarka,
-  iconSize: new Leaflet.Point(50, 65),
-  className: "leaflet-div-icon",
-});
+const getIcon = selected => {
+  const iconWidth = 40;
+  const iconHeight = 49.6;
+
+  return new Leaflet.Icon({
+    iconUrl: selected ? YarmarkaSelected : Yarmarka,
+    iconSize: new Leaflet.Point(iconWidth, iconHeight),
+    className: "leaflet-div-icon",
+    iconAnchor: [iconWidth / 2, iconHeight],
+  });
+};
 
 export class Map extends Component {
   state = {
@@ -27,6 +34,8 @@ export class Map extends Component {
     zoom: 5,
     features: [],
   };
+
+  selectedMarker = null;
 
   componentDidMount() {
     console.log("--> componentDidMount <--");
@@ -53,8 +62,20 @@ export class Map extends Component {
     console.info("--> onClusterClick ggwp", cluster.getAllChildMarkers());
   };
 
-  onMarkerClick = (marker, properties) => {
-    console.info("--> onMarkerClick ggwp", marker, properties);
+  onMarkerClick = marker => {
+    if (this.selectedMarker) {
+      this.selectedMarker.setIcon(getIcon());
+    }
+    marker.setIcon(getIcon(true));
+    this.selectedMarker = marker;
+    console.info("--> onMarkerClick ggwp", marker);
+  };
+
+  onPopupClose = () => {
+    if (this.selectedMarker) {
+      this.selectedMarker.setIcon(getIcon());
+      this.selectedMarker = null;
+    }
   };
 
   render() {
@@ -83,6 +104,7 @@ export class Map extends Component {
         <MarkerClusterGroup
           onClusterClick={this.onClusterClick}
           onMarkerClick={this.onMarkerClick}
+          onPopupClose={this.onPopupClose}
           zoomToBoundsOnClick={false}
         >
           {features &&
@@ -90,10 +112,10 @@ export class Map extends Component {
               <Marker
                 properties={properties}
                 key={id}
-                icon={iconPerson}
+                icon={getIcon()}
                 position={[coordinates[1], coordinates[0]]}
               >
-                <Popup>
+                <Popup maxWidth={144} maxHeight={144}>
                   <div>{properties.address}</div>
                 </Popup>
               </Marker>
