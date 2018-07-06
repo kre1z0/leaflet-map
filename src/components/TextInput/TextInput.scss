@@ -1,0 +1,34 @@
+.textInputWrapper {
+  display: flex;
+  flex-direction: column;
+  .label {
+    color: #bebebe;
+    font-size: 0.923em;
+    margin-bottom: 0.4em;
+  }
+  .textInput {
+    min-height: 2.769em;
+    border-radius: 0.28571429rem !important;
+    box-shadow: none;
+    appearance: none;
+    outline: none;
+    background-color: #fff;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    line-height: 2.286rem;
+    font-size: 1rem;
+    padding: 0 0.8571rem;
+    &::placeholder {
+      font-size: 1em;
+      color: #343434;
+    }
+    &:focus {
+      border-color: #96C8DA;
+    }
+    &:read-only {
+      border-style: dashed;
+    }
+    &:-moz-read-only {
+      border-style: dashed;
+    }
+  }
+}

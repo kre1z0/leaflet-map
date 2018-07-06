@@ -1,0 +1,63 @@
+.autoComplete {
+  display: inline-block;
+  position: relative;
+
+  &.open {
+    .itemsList {
+      :global {
+        animation-name: slideInY;
+      }
+    }
+  }
+  &.emptyList {
+    .itemsList {
+      border: none;
+    }
+    .textInput {
+      &:focus {
+        border-radius: 0.285rem !important;
+        border: 1px solid rgba(34, 36, 38, 0.15);
+      }
+    }
+  }
+
+  .textInput {
+    padding: 0 1em !important;
+    &:focus {
+      border-radius: 0.285rem 0.285rem 0 0 !important;
+      border-bottom-color: transparent;
+    }
+  }
+
+  .itemsList {
+    margin-top: -1px;
+    border: 1px solid #96c8da;
+    border-top: none;
+    overflow-y: auto;
+    background-color: #ffffff;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    animation-iteration-count: 1;
+    transform-origin: top center;
+    animation-duration: 300ms;
+    animation-fill-mode: both;
+    .item {
+      border-top: 1px solid #fafafa;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0.6em 1em;
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: rgba(0, 0, 0, 0.95);
+      }
+      &.selected {
+        font-weight: bold;
+        background: rgba(0, 0, 0, 0.03);
+        color: rgba(0, 0, 0, 0.95);
+      }
+    }
+  }
+}

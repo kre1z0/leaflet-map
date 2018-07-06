@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import fetchJsonp from "fetch-jsonp";
 // https://react-leaflet.js.org/docs/en/context.html
-import { Map as LeafletMap, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
+import { Map as LeafletMap, TileLayer, Marker, ZoomControl } from "react-leaflet";
 // https://leafletjs.com/reference-1.3.0.html
 import Leaflet from "leaflet";
 
+import { Error } from "../../components/Error/Error";
+import { FilteringControlBlock } from "../../components/FilteringControlBlock/FilteringControlBlock";
+import { Popup } from "../../components/Popup/Popup";
 import Yarmarka from "../../assets/icons/Yarmarka.svg";
 import YarmarkaSelected from "../../assets/icons/Yarmarka_selected.svg";
 import cn from "classnames";
+import { fetchFilters, fetchCities, fetchFeatures } from "../../utils/api";
 
 import styles from "./Map.scss";
 
@@ -31,16 +35,45 @@ export class Map extends Component {
     lng: 52,
     zoom: 5,
     features: [],
+    filters: [],
+    selectedFilters: null,
+    selectedCity: {
+      id: 13,
+      name: "Москва",
+    },
+    cities: [],
+    error: false,
   };
 
   selectedMarker = null;
+  leafletMap = null;
 
   componentDidMount() {
+    const { selectedCity } = this.state;
     this.fetchData().then(data => {
       this.setState({
         features: data.features.features.slice(0, 444),
       });
     });
+    fetchFilters({ city: selectedCity.id }).then(({ data }) => {
+      this.setState({
+        filters: data,
+      });
+    });
+    fetchCities().then(({ data }) => {
+      this.setState({
+        cities: data.features,
+      });
+    });
+    fetchFeatures({ city: selectedCity.id })
+      .then(({ data }) => {
+        console.info("--> fetchFeatures", data);
+      })
+      .catch(error => this.setState({ error: true }));
+  }
+
+  componentDidCatch(error) {
+    console.info("--> componentDidCatch", error);
   }
 
   fetchData() {
@@ -56,7 +89,6 @@ export class Map extends Component {
   }
 
   onPopupClose = () => {
-    console.info("--> onPopupClose");
     if (this.selectedMarker) {
       this.selectedMarker.setIcon(getIcon());
       this.selectedMarker = null;
@@ -91,11 +123,26 @@ export class Map extends Component {
     this.selectedMarker = marker;
   };
 
+  onFilterChange = filter => value => {
+    const { selectedFilters } = this.state;
+
+    this.setState({
+      selectedFilters: {
+        ...selectedFilters,
+        [filter.name]: value,
+      },
+    });
+  };
+
+  onCityChange = (id, name) => this.setState({ selectedCity: { id, name } });
+
+  onFilterSubmit = () => {};
+
   render() {
     const position = [this.state.lat, this.state.lng];
-    const { features } = this.state;
+    const { features, filters, selectedFilters, cities, selectedCity, error } = this.state;
     const zoomNew = this.state.zoom ? this.state.zoom : 13;
-
+    console.info("--> cities", cities);
     return (
       <LeafletMap
         onZoomEnd={this.onZoomEnd}
@@ -108,6 +155,16 @@ export class Map extends Component {
         zoomControl={false}
         className={cn("leaflet-container", styles.map)}
       >
+        {error && <Error text="Произошла ошибка" />}
+        <FilteringControlBlock
+          selectedCity={selectedCity}
+          cities={cities}
+          filters={filters}
+          onCityChange={this.onCityChange}
+          onFilterChange={this.onFilterChange}
+          onFilterSubmit={this.onFilterSubmit}
+          selectedFilters={selectedFilters}
+        />
         <ZoomControl position="topright" />
         <TileLayer
           subdomains={[0, 1, 2, 3]}
@@ -123,17 +180,7 @@ export class Map extends Component {
               position={[coordinates[1], coordinates[0]]}
               onClick={this.onMarkerClick}
             >
-              <Popup maxWidth={444} maxHeight={444} onClose={this.onPopupClose}>
-                <div>
-                  {properties.address}
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse fugiat labore
-                  molestiae neque officia omnis quas. Ea ex iusto ratione. Architecto ipsam nesciunt
-                  nobis numquam sunt temporibus veniam, veritatis voluptate!
-                  <div className={styles.footer}>
-                    <button onClick={this.changePopupContent}>ggwp</button>
-                  </div>
-                </div>
-              </Popup>
+              <Popup properties={properties} onClose={this.onPopupClose} />
             </Marker>
           ))}
       </LeafletMap>

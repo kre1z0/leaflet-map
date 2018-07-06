@@ -1,0 +1,11 @@
+.error {
+  top: 50%;
+  left: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 10px 20px;
+  z-index: 998;
+  font-size: 18px;
+  color: #fd431f;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
