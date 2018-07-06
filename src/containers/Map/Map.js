@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import fetchJsonp from "fetch-jsonp";
-import { Map as LeafletMap, TileLayer, Marker, Popup } from "react-leaflet";
+// https://react-leaflet.js.org/docs/en/context.html
+import { Map as LeafletMap, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
 // https://leafletjs.com/reference-1.3.0.html
 import Leaflet from "leaflet";
-// https://github.com/YUzhva/react-leaflet-markercluster
-// https://github.com/Leaflet/Leaflet.markercluster#all-options
-import MarkerClusterGroup from "react-leaflet-markercluster";
 
 import Yarmarka from "../../assets/icons/Yarmarka.svg";
 import YarmarkaSelected from "../../assets/icons/Yarmarka_selected.svg";
@@ -38,17 +36,16 @@ export class Map extends Component {
   selectedMarker = null;
 
   componentDidMount() {
-    console.log("--> componentDidMount <--");
     this.fetchData().then(data => {
       this.setState({
-        features: data.features.features,
+        features: data.features.features.slice(0, 444),
       });
-      console.info("--> data ggwp", data);
     });
   }
 
   fetchData() {
     return fetchJsonp(`${apiUrl}static/fair.jsonp`, {
+      timeout: 30000,
       jsonpCallbackFunction: "callback",
     })
       .then(res => res.json())
@@ -58,24 +55,40 @@ export class Map extends Component {
       });
   }
 
-  onClusterClick = cluster => {
-    console.info("--> onClusterClick ggwp", cluster.getAllChildMarkers());
+  onPopupClose = () => {
+    console.info("--> onPopupClose");
+    if (this.selectedMarker) {
+      this.selectedMarker.setIcon(getIcon());
+      this.selectedMarker = null;
+    }
   };
 
-  onMarkerClick = marker => {
+  onLeafletMapRef = ref => {
+    this.leafletMap = ref;
+  };
+
+  onZoomEnd = () => {
+    // const featuresInView = this.getFeaturesInView();
+    //
+    // if (featuresInView.length < 300) {
+    //   this.setState({
+    //     clusterization: false,
+    //   });
+    // } else {
+    //   this.setState({
+    //     clusterization: true,
+    //   });
+    // }
+  };
+
+  onMarkerClick = e => {
+    const marker = e.sourceTarget;
+
     if (this.selectedMarker) {
       this.selectedMarker.setIcon(getIcon());
     }
     marker.setIcon(getIcon(true));
     this.selectedMarker = marker;
-    console.info("--> onMarkerClick ggwp", marker);
-  };
-
-  onPopupClose = () => {
-    if (this.selectedMarker) {
-      this.selectedMarker.setIcon(getIcon());
-      this.selectedMarker = null;
-    }
   };
 
   render() {
@@ -85,42 +98,44 @@ export class Map extends Component {
 
     return (
       <LeafletMap
+        onZoomEnd={this.onZoomEnd}
         key="map"
+        ref={this.onLeafletMapRef}
         zoom={zoomNew}
         center={position}
         minZoom={4}
         maxZoom={18}
         zoomControl={false}
-        className={cn(
-          "leaflet-container leaflet-fade-anim step15 ",
-          styles.map,
-        )}
+        className={cn("leaflet-container", styles.map)}
       >
+        <ZoomControl position="topright" />
         <TileLayer
           subdomains={[0, 1, 2, 3]}
           attribution="Данные предоставлены &copy; <a target=&quot;_blank&quot; href=&quot;http://2gis.ru&quot;>2GIS</a>"
           url="https://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1&layerType=nc"
         />
-        <MarkerClusterGroup
-          onClusterClick={this.onClusterClick}
-          onMarkerClick={this.onMarkerClick}
-          onPopupClose={this.onPopupClose}
-          zoomToBoundsOnClick={false}
-        >
-          {features &&
-            features.map(({ id, geometry: { coordinates }, properties }) => (
-              <Marker
-                properties={properties}
-                key={id}
-                icon={getIcon()}
-                position={[coordinates[1], coordinates[0]]}
-              >
-                <Popup maxWidth={144} maxHeight={144}>
-                  <div>{properties.address}</div>
-                </Popup>
-              </Marker>
-            ))}
-        </MarkerClusterGroup>
+        {features &&
+          features.map(({ id, geometry: { coordinates }, properties }) => (
+            <Marker
+              properties={properties}
+              key={id}
+              icon={getIcon()}
+              position={[coordinates[1], coordinates[0]]}
+              onClick={this.onMarkerClick}
+            >
+              <Popup maxWidth={444} maxHeight={444} onClose={this.onPopupClose}>
+                <div>
+                  {properties.address}
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse fugiat labore
+                  molestiae neque officia omnis quas. Ea ex iusto ratione. Architecto ipsam nesciunt
+                  nobis numquam sunt temporibus veniam, veritatis voluptate!
+                  <div className={styles.footer}>
+                    <button onClick={this.changePopupContent}>ggwp</button>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
       </LeafletMap>
     );
   }
