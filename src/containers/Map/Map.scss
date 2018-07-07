@@ -4,3 +4,17 @@
   min-width: 100%;
   min-height: 100%;
 }
+
+.leafletClusterIcon {
+  border-radius: 50%;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  border: 6px solid rgb(137, 204, 241);
+  box-shadow: rgb(255, 255, 255) 0 0 0 2px, rgba(0, 0, 0, 0.16) 0 3px 6px, rgba(0, 0, 0, 0.23) 0 3px 6px;
+  > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

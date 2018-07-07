@@ -7,11 +7,13 @@ import Leaflet from "leaflet";
 
 import { Error } from "../../components/Error/Error";
 import { FilteringControlBlock } from "../../components/FilteringControlBlock/FilteringControlBlock";
+import { Legend } from "../../components/Legend/Legend";
 import { Popup } from "../../components/Popup/Popup";
 import Yarmarka from "../../assets/icons/Yarmarka.svg";
 import YarmarkaSelected from "../../assets/icons/Yarmarka_selected.svg";
 import cn from "classnames";
 import { fetchFilters, fetchCities, fetchFeatures } from "../../utils/api";
+import testFeatures from "../../assets/test-data/features";
 
 import styles from "./Map.scss";
 
@@ -20,6 +22,12 @@ const apiUrl = "https://msp.everpoint.ru/";
 const getIcon = selected => {
   const iconWidth = 40;
   const iconHeight = 49.6;
+
+  // return new Leaflet.divIcon({
+  //   html: `<span>4</span>`,
+  //   iconSize: new Leaflet.Point(40, 40),
+  //   className: styles.leafletClusterIcon,
+  // });
 
   return new Leaflet.Icon({
     iconUrl: selected ? YarmarkaSelected : Yarmarka,
@@ -134,7 +142,17 @@ export class Map extends Component {
     });
   };
 
-  onCityChange = (id, name) => this.setState({ selectedCity: { id, name } });
+  onCityChange = id => {
+    const { cities } = this.state;
+
+    const selectedCity = cities.find(item => item.id === id);
+
+    if (selectedCity) {
+      this.setState({ selectedCity: { id, name: selectedCity.properties.name } });
+    } else {
+      this.setState({ selectedCity: this.state.selectedCity });
+    }
+  };
 
   onFilterSubmit = () => {};
 
@@ -142,7 +160,7 @@ export class Map extends Component {
     const position = [this.state.lat, this.state.lng];
     const { features, filters, selectedFilters, cities, selectedCity, error } = this.state;
     const zoomNew = this.state.zoom ? this.state.zoom : 13;
-    console.info("--> cities", cities);
+
     return (
       <LeafletMap
         onZoomEnd={this.onZoomEnd}
@@ -165,6 +183,7 @@ export class Map extends Component {
           onFilterSubmit={this.onFilterSubmit}
           selectedFilters={selectedFilters}
         />
+        <Legend features={testFeatures} />
         <ZoomControl position="topright" />
         <TileLayer
           subdomains={[0, 1, 2, 3]}

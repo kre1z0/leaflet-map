@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
-import styles from "./AutoComplete.scss";
-
 import { TextInput } from "../TextInput/TextInput";
+
+import styles from "./AutoComplete.scss";
 
 export class AutoComplete extends Component {
   static propTypes = {
@@ -42,6 +42,7 @@ export class AutoComplete extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { value, values } = this.props;
+
     if (value !== nextProps.value) {
       const findIndex = nextProps.values.findIndex(item => item.value === nextProps.value);
       if (findIndex !== -1) {
@@ -55,6 +56,10 @@ export class AutoComplete extends Component {
           value: "",
         });
       }
+    } else {
+      this.setState({
+        value,
+      });
     }
 
     if (values.length !== nextProps.values.length) {
@@ -71,7 +76,7 @@ export class AutoComplete extends Component {
 
   onSelect = ({ id, value }) => {
     const { onChange } = this.props;
-    onChange && onChange(id, value);
+    onChange && onChange(id);
     this.autoCompleteInput.focus();
     this.setState({
       value,
@@ -133,8 +138,6 @@ export class AutoComplete extends Component {
     const code = e.keyCode;
     const { selectItemIndex, items, value } = this.state;
 
-    const selectedItem = items.find(item => item.value === value);
-
     if (code === 38) {
       // UP
       e.preventDefault();
@@ -159,7 +162,7 @@ export class AutoComplete extends Component {
       items[selectItemIndex] && this.onSelect(items[selectItemIndex]);
     } else if (code === 27 || code === 9) {
       // ESC and TAB
-      onChange && onChange(selectedItem.id, value);
+      onChange && onChange(value);
       document.removeEventListener("keydown", this.keyDown);
       document.removeEventListener("click", this.handleDocumentClick);
       document.removeEventListener("touchend", this.handleDocumentClick);
@@ -177,13 +180,11 @@ export class AutoComplete extends Component {
   };
 
   handleDocumentClick = e => {
-    const { items } = this.state;
-    const { onChange, value } = this.props;
-    const selectedItem = items.find(item => item.value === value);
+    const { onChange } = this.props;
 
     const inside = this.el.contains(e.target);
     if (!inside) {
-      onChange && onChange(selectedItem.id, this.state.value);
+      onChange && onChange(this.state.value);
       this.setState({
         items: [],
       });
@@ -246,7 +247,6 @@ export class AutoComplete extends Component {
           onRef={this.onRef}
           placeholder={placeholder}
           style={{ width: "100%" }}
-          onBlur={this.onBlur}
           onChange={this.onChange}
           onFocus={this.onFocus}
           value={this.state.value}

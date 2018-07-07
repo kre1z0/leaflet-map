@@ -65,6 +65,7 @@ export const FilteringControlBlock = ({
     <div ref={onRef} className={styles.filteringControlBlock}>
       <h2>Коммерческая недвижимость</h2>
       <AutoComplete
+        placeholder="Выберите город"
         value={selectedCity && selectedCity.name}
         onChange={onCityChange}
         values={cities.map(({ id, properties: { name } }) => ({
