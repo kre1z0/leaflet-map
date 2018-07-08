@@ -1,11 +1,12 @@
-'use strict';
+"use strict";
 
-const errorOverlayMiddleware = require('react-error-overlay/middleware');
-const config = require('./webpack.config.dev');
-const paths = require('./paths');
+const errorOverlayMiddleware = require("react-error-overlay/middleware");
+const config = require("./webpack.config.dev");
+const proxySettings = require("./webpack.proxy.settings");
+const paths = require("./paths");
 
-const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-const host = process.env.HOST || '0.0.0.0';
+const protocol = process.env.HTTPS === "true" ? "https" : "http";
+const host = process.env.HOST || "0.0.0.0";
 
 module.exports = function(proxy, allowedHost) {
   return {
@@ -14,7 +15,7 @@ module.exports = function(proxy, allowedHost) {
     compress: true,
     // Silence WebpackDevServer's own logs since they're generally not useful.
     // It will still show compile warnings and errors with this setting.
-    clientLogLevel: 'none',
+    clientLogLevel: "none",
     // By default WebpackDevServer serves physical files from current directory
     // in addition to all the virtual build products that it serves from memory.
     // This is confusing because those files won’t automatically be available in
@@ -50,7 +51,7 @@ module.exports = function(proxy, allowedHost) {
       ignored: /node_modules/,
     },
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
-    https: protocol === 'https',
+    https: protocol === "https",
     host: host,
     overlay: false,
     historyApiFallback: {
@@ -60,6 +61,7 @@ module.exports = function(proxy, allowedHost) {
     },
     public: allowedHost,
     proxy,
+    proxy: proxySettings,
     setup(app) {
       // This lets us open files from the runtime error overlay.
       app.use(errorOverlayMiddleware());

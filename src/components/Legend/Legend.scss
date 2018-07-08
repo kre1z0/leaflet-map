@@ -1,4 +1,6 @@
 .legend {
+  display: flex;
+  cursor: default;
   padding: 5px 10px;
   background-color: #fff;
   z-index: 999;
@@ -7,4 +9,8 @@
   transform: translateX(-50%);
   bottom: 30px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+}
+
+.category {
+  display: flex;
 }

@@ -40,6 +40,15 @@ export default {
       styleId: 5,
       type: "icon",
     },
+    {
+      borderColor: "#249700",
+      legendLabel: "Группа объектов",
+      color: "#000000",
+      fillColor: "#FFFFFF",
+      styleId: 0,
+      type: "cluster",
+      borderWidth: 2,
+    },
   ],
   features: {
     type: "FeatureCollection",

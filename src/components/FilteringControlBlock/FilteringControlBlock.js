@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Leaflet from "leaflet";
 
 import { DropDown } from "../DropDown/DropDown";
 import { AutoComplete } from "../AutoComplete/AutoComplete";
+import { disableLeafletEventPropagation } from "../../utils/utils";
 
 import styles from "./FilteringControlBlock.scss";
 
@@ -47,11 +47,6 @@ const FilterBlock = props => {
   }
 };
 
-const onRef = ref =>
-  ref &&
-  Leaflet.DomEvent.disableClickPropagation(ref) &&
-  Leaflet.DomEvent.disableScrollPropagation(ref);
-
 export const FilteringControlBlock = ({
   selectedCity,
   cities,
@@ -62,7 +57,7 @@ export const FilteringControlBlock = ({
   onCityChange,
 }) => {
   return (
-    <div ref={onRef} className={styles.filteringControlBlock}>
+    <div ref={disableLeafletEventPropagation} className={styles.filteringControlBlock}>
       <h2>Коммерческая недвижимость</h2>
       <AutoComplete
         placeholder="Выберите город"
