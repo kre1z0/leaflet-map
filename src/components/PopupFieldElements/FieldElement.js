@@ -1,6 +1,5 @@
 import React from "react";
 import numeral from "numeral";
-import cn from "classnames";
 
 import { isNumeric } from "../../utils/number";
 import { replaceNbsps } from "../../utils/string";

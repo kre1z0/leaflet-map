@@ -9,19 +9,18 @@
   &.open {
     .selectField {
       border-color: #96C8DA;
-      border-radius: 0.285rem 0.285rem 0 0 !important;
+      border-radius: 0.285rem 0.285rem 0 0;
       border-bottom-color: transparent;
     }
-    .itemsList {
-      overflow-y: auto;
-      height: auto;
-      border: 1px solid #96C8DA;
-      border-top: none;
-      :global {
-        animation-name: slideInY;
+    &.newPositionTopContainer {
+      .selectField {
+        border-radius: 0 0 0.285rem 0.285rem;
+        border-top-color: transparent;
+        border-bottom-color: #96C8DA;
       }
     }
   }
+
   .selectField {
     cursor: pointer;
     display: flex;
@@ -40,45 +39,45 @@
       display: block;
     }
   }
-  .itemsList {
-    height: 0;
-    overflow: hidden;
-    cursor: pointer;
-    margin-top: -1px;
-    position: absolute;
-    z-index: 10;
-    width: 100%;
-    border-radius: 0;
-    background-color: #ffffff;
-    animation-iteration-count: 1;
-    transform-origin: top center;
-    animation-duration: 300ms;
-    animation-fill-mode: both;
-    .item {
-      border-top: 1px solid #fafafa;
-      display: flex;
-      align-items: center;
-      padding: 0.6em 1em;
-      &:hover {
-        font-weight: normal;
-        background: rgba(0, 0, 0, 0.05);
-        color: rgba(0, 0, 0, 0.95);
-      }
-      &.selected {
-        font-weight: bold;
-        background: rgba(0, 0, 0, 0.03);
-        color: rgba(0, 0, 0, 0.95);
-      }
-    }
-  }
+
 }
 
-.arrow {
-  fill: rgba(0, 0, 0, 0.87);
+.itemsList {
+  margin-top: -1px;
+  max-height: 210px;
+  border: 1px solid #96C8DA;
+  border-top: none;
+  overflow-y: auto;
+  z-index: 999;
+  cursor: pointer;
   position: absolute;
-  top: 50%;
-  right: 0;
-  margin: 0 0.8571rem;
-  line-height: 0;
-  margin-top: -2px;
+  width: 100%;
+  border-radius: 0 0 0.285rem 0.285rem;
+  background-color: #ffffff;
+  animation-iteration-count: 1;
+  transform-origin: top center;
+  animation-duration: 300ms;
+  animation-fill-mode: both;
+  .item {
+    border-top: 1px solid #fafafa;
+    display: flex;
+    align-items: center;
+    padding: 0.6em 1em;
+    &:hover {
+      font-weight: normal;
+      background: rgba(0, 0, 0, 0.05);
+      color: rgba(0, 0, 0, 0.95);
+    }
+    &.selected {
+      font-weight: bold;
+      background: rgba(0, 0, 0, 0.03);
+      color: rgba(0, 0, 0, 0.95);
+    }
+  }
+  &.newPositionTop {
+    margin-top: 1px;
+    border-radius: 0.285rem 0.285rem 0 0;
+    border: 1px solid #96C8DA;
+    border-bottom: none;
+  }
 }

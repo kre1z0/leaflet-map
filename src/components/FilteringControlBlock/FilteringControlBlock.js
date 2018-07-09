@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import cn from "classnames";
 
+import { Arrow } from "../../components/icons/Arrow";
 import { DropDown } from "../DropDown/DropDown";
 import { AutoComplete } from "../AutoComplete/AutoComplete";
 import { Button } from "../../components/Button/Button";
@@ -27,7 +29,7 @@ const FilterSelect = props => {
   };
 
   return (
-    <div>
+    <div className={styles.filterSelect}>
       <h4>{name_ru}</h4>
       <DropDown
         onChange={onSelect}
@@ -56,10 +58,25 @@ export const FilteringControlBlock = ({
   onFilterChange,
   onFilterSubmit,
   onCityChange,
+  onCollapse,
+  collapsed,
 }) => {
   return (
-    <div ref={disableLeafletEventPropagation} className={styles.filteringControlBlock}>
-      <h2>Коммерческая недвижимость</h2>
+    <div
+      ref={disableLeafletEventPropagation}
+      className={cn(styles.filteringControlBlock, { [styles.collapsed]: collapsed })}
+    >
+      <div className={styles.header}>
+        <h2>Коммерческая недвижимость</h2>
+        <button className={styles.collapseBtn} onClick={onCollapse}>
+          <Arrow
+            style={{
+              transition: "transform 400ms ease",
+              transform: collapsed ? "rotate(180deg)" : "rotate(0deg)",
+            }}
+          />
+        </button>
+      </div>
       <AutoComplete
         className={styles.cityAutoComplete}
         placeholder="Выберите город"
@@ -97,4 +114,6 @@ FilteringControlBlock.propTypes = {
   onFilterSubmit: PropTypes.func,
   onFilterChange: PropTypes.func,
   onCityChange: PropTypes.func,
+  onCollapse: PropTypes.func,
+  collapsed: PropTypes.bool,
 };

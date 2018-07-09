@@ -33,6 +33,7 @@
     "lodash": "^4.17.10",
     "numeral": "^2.0.6",
     "react": "^16.3.2",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.3.2",
     "react-leaflet": "^1.9.1"
   },

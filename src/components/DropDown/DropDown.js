@@ -1,18 +1,12 @@
 import React, { Component } from "react";
+import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 import PropTypes from "prop-types";
 import cn from "classnames";
 
-import styles from "./DropDown.scss";
+import { Arrow } from "../../components/icons/Arrow";
+import { Portal } from "../../components/Portal/Portal";
 
-const Arrow = () => {
-  return (
-    <div className={styles.arrow}>
-      <svg viewBox="0 0 7 4" height="4" width="7">
-        <polygon points="3.5,4 0,0 7,0 " />
-      </svg>
-    </div>
-  );
-};
+import styles from "./DropDown.scss";
 
 export class DropDown extends Component {
   static propTypes = {
@@ -36,13 +30,76 @@ export class DropDown extends Component {
     open: false,
     keyDown: false,
     selectItemIndex: -1,
+
+    marginTop: -1,
+    left: 0,
+    top: 0,
+    y: 0,
+    x: 0,
+    width: 0,
+    position: "bottom",
+    newPosition: "bottom",
   };
 
   items = [];
 
-  componentDidUpdate() {
-    this.getScrollValue(this.state.selectItemIndex);
+  componentDidMount() {
+    window.addEventListener("resize", this.onResize);
+    this.onResize();
   }
+
+  componentDidUpdate() {
+    const { open } = this.state;
+    if (open) {
+      this.getScrollValue(this.state.selectItemIndex);
+    }
+  }
+
+  onResize = () => {
+    if (!this.el) return;
+
+    const { maxHeightItemsList } = this.props;
+
+    const { position } = this.state;
+
+    const { width, height, top, left } = this.el.getBoundingClientRect();
+
+    let newPosition = position;
+
+    const diff = top + maxHeightItemsList + height;
+
+    const windowHeight = Math.ceil(document.documentElement.clientHeight, window.innerHeight || 0);
+
+    if (diff > windowHeight) {
+      newPosition = "top";
+    }
+
+    let y = 0;
+    let x = 0;
+    let newTop = 0;
+    let newLeft = 0;
+
+    if (newPosition === "top") {
+      y = `-50%`;
+      x = `-100%`;
+      newTop = top;
+      newLeft = left + width / 2;
+    } else {
+      y = `-50%`;
+      x = `0`;
+      newTop = top + height;
+      newLeft = left + width / 2;
+    }
+
+    this.setState({
+      newPosition,
+      width,
+      y,
+      x,
+      top: newTop,
+      left: newLeft,
+    });
+  };
 
   getScrollValue = selectedItemIndex => {
     const { maxHeightItemsList } = this.props;
@@ -89,6 +146,7 @@ export class DropDown extends Component {
     document.removeEventListener("click", this.handleDocumentClick);
     document.removeEventListener("touchend", this.handleDocumentClick);
     document.removeEventListener("keydown", this.keyDown);
+    window.removeEventListener("resize", this.onResize);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -173,50 +231,75 @@ export class DropDown extends Component {
   };
 
   render() {
-    const { open, selectItemIndex, keyDown } = this.state;
-    const { value, values, placeholder, className, maxHeightItemsList, itemMinHeight } = this.props;
+    const { open, selectItemIndex, keyDown, top, left, y, x, width, newPosition } = this.state;
+    const { value, values, placeholder, className, itemMinHeight } = this.props;
     const find = values && values.find(item => item.id === value);
 
     return (
       <div
         className={cn(styles.dropDown, className, {
           [styles.open]: open,
+          [styles.newPositionTopContainer]: newPosition === "top",
           [styles.disabled]: values.length === 0,
         })}
         ref={this.onDropDownRef}
       >
         <div onClick={this.open} className={styles.selectField}>
           <span className={styles.value}>{find ? find.value : placeholder}</span>
-          <Arrow />
+          <Arrow
+            style={{
+              fill: "rgba(0, 0, 0, 0.87)",
+              position: "absolute",
+              top: "50%",
+              transform: "translateY(-50%)",
+              right: 10,
+            }}
+          />
         </div>
-        <div
-          style={{
-            maxHeight: maxHeightItemsList,
-          }}
-          ref={el => (this.itemList = el)}
-          className={styles.itemsList}
+        <CSSTransitionGroup
+          transitionEnterTimeout={200}
+          transitionLeaveTimeout={200}
+          transitionName="sgis-slide-animation"
         >
-          {values.map((item, index) => {
-            const selected = keyDown ? selectItemIndex === index : value === item.id;
-            return (
+          {open && (
+            <Portal>
               <div
                 style={{
-                  minHeight: itemMinHeight,
+                  width,
+                  top,
+                  left,
+                  transformOrigin: "center",
+                  transform: `translate(${y}, ${x})`,
                 }}
-                ref={this.onItemsRef}
-                key={`${index}-${item.id}`}
-                onClick={() => {
-                  this.selectItem(item);
-                }}
-                className={cn(styles.item, {
-                  [styles.selected]: selected,
+                ref={el => (this.itemList = el)}
+                className={cn(styles.itemsList, {
+                  [styles.newPositionTop]: newPosition === "top",
                 })}
               >
-                {item.value}
+                {values.map((item, index) => {
+                  const selected = keyDown ? selectItemIndex === index : value === item.id;
+                  return (
+                    <div
+                      style={{
+                        minHeight: itemMinHeight,
+                      }}
+                      ref={this.onItemsRef}
+                      key={`${index}-${item.id}`}
+                      onClick={() => {
+                        this.selectItem(item);
+                      }}
+                      className={cn(styles.item, {
+                        [styles.selected]: selected,
+                      })}
+                    >
+                      {item.value}
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+            </Portal>
+          )}
+        </CSSTransitionGroup>
       </div>
     );
   }

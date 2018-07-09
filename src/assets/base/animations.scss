@@ -1,0 +1,18 @@
+:global {
+  .sgis-slide-animation {
+    &-enter {
+      max-height: 0;
+    }
+    &-enter-active {
+      max-height: 210px;
+      transition: max-height 200ms linear;
+    }
+    &-leave {
+      max-height: 210px;
+      transition: max-height 200ms linear;
+    }
+    &-leave-active {
+      max-height: 0;
+    }
+  }
+}

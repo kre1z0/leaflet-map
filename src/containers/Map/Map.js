@@ -20,7 +20,7 @@ export class Map extends Component {
   constructor() {
     super();
     // Debounce
-    this.getFeatures = debounce(this.getFeatures, 300);
+    this.getFeatures = debounce(this.getFeatures, 400);
   }
   state = {
     center: [55.753215, 37.622504],
@@ -37,6 +37,7 @@ export class Map extends Component {
     },
     cities: [],
     error: false,
+    collapsed: false,
   };
 
   leafletMap = null;
@@ -194,6 +195,7 @@ export class Map extends Component {
       error,
       center,
       bounds,
+      collapsed,
     } = this.state;
 
     const zoomNew = this.state.zoom ? this.state.zoom : 13;
@@ -215,6 +217,8 @@ export class Map extends Component {
       >
         {error && <Error text="Произошла ошибка" />}
         <FilteringControlBlock
+          onCollapse={() => this.setState({ collapsed: !this.state.collapsed })}
+          collapsed={collapsed}
           selectedCity={selectedCity}
           cities={cities}
           filters={filters}
