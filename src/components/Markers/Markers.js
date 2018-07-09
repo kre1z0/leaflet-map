@@ -1,13 +1,11 @@
-import React from "react";
 import Leaflet from "leaflet";
 
-import Yarmarka from "../../assets/icons/Yarmarka.svg";
-import YarmarkaSelected from "../../assets/icons/Yarmarka_selected.svg";
+import { theme } from "../../assets/theme/theme";
 
 import styles from "./Markers.scss";
 
 const clusterTemplate = props => {
-  const { count, size, borderColor = "#00A513", color = "#FFFFFF", fillColor = "#FFFFFF" } = props;
+  const { count, size, color = "#FFFFFF", fillColor = "#FFFFFF" } = props;
 
   const sizeStyle = `
       width: ${size}px; 
@@ -24,7 +22,7 @@ const clusterTemplate = props => {
         <div class="${styles.cluster}" style="${sizeStyle}">
             <svg viewBox="0 0 38 38" height="${size}px" width="${size}px"> 
                 <circle 
-                    fill="${borderColor}"
+                    fill="${theme.colors.mustard}"
                     stroke="${fillColor}"
                     stroke-width="${strokeWidth}"
                     cx="19" 
@@ -48,9 +46,8 @@ const getStyleById = (styles, styleId) => {
 };
 
 export const getIcon = ({ featureStyles, properties, cluster }) => {
+  const style = getStyleById(featureStyles, properties.styleId);
   if (cluster) {
-    const style = getStyleById(featureStyles, properties.styleId);
-    console.info("-->style ggwp", style);
     const { size, count } = properties;
     return new Leaflet.divIcon({
       html: clusterTemplate({ size, count, ...style }),
@@ -59,14 +56,13 @@ export const getIcon = ({ featureStyles, properties, cluster }) => {
       iconAnchor: [size / 2, size / 2],
     });
   } else {
-    const iconWidth = 40;
-    const iconHeight = 49.6;
+    const { iconUrl, iconSize, iconAnchor } = style;
 
     return new Leaflet.Icon({
-      // iconUrl: selected ? YarmarkaSelected : Yarmarka,
-      iconSize: new Leaflet.Point(iconWidth, iconHeight),
+      iconUrl,
+      iconSize: new Leaflet.Point(iconSize[0], iconSize[1]),
       className: "leaflet-div-icon",
-      iconAnchor: [iconWidth / 2, iconHeight],
+      iconAnchor: [iconAnchor[0], iconAnchor[1]],
     });
   }
 };

@@ -23,7 +23,7 @@ const Category = props => {
   return (
     <div className={styles.category}>
       <CategoryIcon {...props} />
-      {legendLabel}
+      <label className={styles.label}>{legendLabel}</label>
     </div>
   );
 };

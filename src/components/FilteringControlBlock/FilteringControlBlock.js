@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import { DropDown } from "../DropDown/DropDown";
 import { AutoComplete } from "../AutoComplete/AutoComplete";
+import { Button } from "../../components/Button/Button";
 import { disableLeafletEventPropagation } from "../../utils/utils";
 
 import styles from "./FilteringControlBlock.scss";
@@ -80,7 +81,7 @@ export const FilteringControlBlock = ({
           }
         />
       ))}
-      <button onClick={onFilterSubmit}>Применить</button>
+      <Button onClick={onFilterSubmit}>Кнопка</Button>
     </div>
   );
 };

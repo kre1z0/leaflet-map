@@ -194,7 +194,7 @@ export class AutoComplete extends Component {
     }
   };
 
-  onFocus = () => {
+  onClick = () => {
     const { value, values } = this.props;
 
     const findIndex = values.findIndex(item => item.value === value);
@@ -240,7 +240,7 @@ export class AutoComplete extends Component {
     const selectedItem = items.find(item => item.value === value);
 
     return (
-      <div ref={el => (this.el = el)} className={mergedClassName}>
+      <div ref={el => (this.el = el)} className={mergedClassName} onClick={this.onClick}>
         <TextInput
           id={selectedItem && selectedItem.id}
           className={styles.textInput}
@@ -248,7 +248,6 @@ export class AutoComplete extends Component {
           placeholder={placeholder}
           style={{ width: "100%" }}
           onChange={this.onChange}
-          onFocus={this.onFocus}
           value={this.state.value}
         />
         <div

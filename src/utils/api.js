@@ -19,11 +19,11 @@ export const fetchCities = () =>
   });
 
 // 402 - авторизация отсутствует
-export const fetchFeatures = ({ city }) =>
+export const fetchFeatures = params =>
   axios.get(`/api/service/commercerealty/${SERVICE_ID}`, {
     withCredentials: true,
     params: {
       format: "json",
-      city,
+      ...params,
     },
   });

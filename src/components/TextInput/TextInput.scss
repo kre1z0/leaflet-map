@@ -30,5 +30,8 @@
     &:-moz-read-only {
       border-style: dashed;
     }
+    &::-ms-clear {
+      display: none;
+    }
   }
 }

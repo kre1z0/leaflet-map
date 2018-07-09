@@ -1,4 +1,5 @@
 import React from "react";
+import { theme } from "../../assets/theme/theme";
 
 export const Icon = props => {
   const { iconUrl, iconSize, type } = props;
@@ -6,16 +7,16 @@ export const Icon = props => {
 };
 
 export const Cluster = props => {
-  const { borderColor, fillColor, borderWidth } = props;
+  const { fillColor, borderWidth } = props;
   return (
     <div
       style={{
         display: "inline-block",
         borderRadius: "500em",
-        width: 21,
-        height: 21,
+        width: 18,
+        height: 18,
         background: fillColor,
-        border: `${borderWidth}px solid ${borderColor}`,
+        border: `${borderWidth}px solid ${theme.colors.mustard}`,
       }}
     />
   );

@@ -4,6 +4,7 @@
 
   &.open {
     .itemsList {
+      height: auto;
       :global {
         animation-name: slideInY;
       }
@@ -43,6 +44,7 @@
     transform-origin: top center;
     animation-duration: 300ms;
     animation-fill-mode: both;
+    height: 0;
     .item {
       border-top: 1px solid #fafafa;
       cursor: pointer;
