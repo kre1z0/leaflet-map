@@ -18,14 +18,14 @@ const getFormattedValue = (value, name) => {
 
 const FieldRow = ({ children }) => <div className={styles.fieldRow}>{children}</div>;
 
-const FieldName = ({ name }) => <div>{name}</div>;
+const FieldName = ({ name }) => <div className={styles.name}>{name}</div>;
 
 const Icon = ({ ico, tooltip }) => {
   return <img src={ico} title={tooltip} alt={tooltip} />;
 };
 
 const FieldValue = ({ value, element, icons }) => (
-  <div>
+  <div className={styles.value}>
     {element ? element : getFormattedValue(replaceNbsps(value))}
     {icons && (
       <div>
@@ -52,7 +52,14 @@ export const LinkFieldElement = ({ name, value, url, icons }) => {
   return (
     <FieldRow>
       <FieldName name={name} />
-      <FieldValue icons={icons} element={<a href={url}>{value}</a>} />
+      <FieldValue
+        icons={icons}
+        element={
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            {value}
+          </a>
+        }
+      />
     </FieldRow>
   );
 };

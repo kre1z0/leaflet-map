@@ -20,7 +20,7 @@ export class Map extends Component {
   constructor() {
     super();
     // Debounce
-    this.getFeatures = debounce(this.getFeatures, 400);
+    this.getFeatures = debounce(this.getFeatures, 300);
   }
   state = {
     center: [55.753215, 37.622504],

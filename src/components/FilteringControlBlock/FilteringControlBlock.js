@@ -61,6 +61,7 @@ export const FilteringControlBlock = ({
     <div ref={disableLeafletEventPropagation} className={styles.filteringControlBlock}>
       <h2>Коммерческая недвижимость</h2>
       <AutoComplete
+        className={styles.cityAutoComplete}
         placeholder="Выберите город"
         value={selectedCity && selectedCity.name}
         onChange={onCityChange}
@@ -81,7 +82,9 @@ export const FilteringControlBlock = ({
           }
         />
       ))}
-      <Button onClick={onFilterSubmit}>Кнопка</Button>
+      <div className={styles.submitBtnContainer}>
+        <Button onClick={onFilterSubmit}>Применить</Button>
+      </div>
     </div>
   );
 };

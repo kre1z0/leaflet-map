@@ -434,17 +434,17 @@
   /* popup */
 
   .leaflet-popup {
+    border-top: 4px solid #ffdd2d;
     position: absolute;
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
   }
   .leaflet-popup-content-wrapper {
     padding: 1px;
     text-align: left;
-    border-radius: 12px;
   }
   .leaflet-popup-content {
-    margin: 13px 19px;
+    //margin: 13px 19px;
     line-height: 1.4;
   }
   .leaflet-popup-content p {

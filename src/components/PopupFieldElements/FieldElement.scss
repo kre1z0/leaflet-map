@@ -1,3 +1,18 @@
 .fieldRow {
   display: flex;
+  font-size: 13px;
+  margin-bottom: 5px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.name {
+  width: 184px;
+  padding-right: 10px;
+  font-weight: bold;
+}
+
+.value {
+  flex: 1;
 }

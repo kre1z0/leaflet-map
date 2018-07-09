@@ -6,15 +6,20 @@ import { GetFieldByProperty } from "../../components/PopupFieldElements/GetField
 
 import styles from "./Popup.scss";
 
-export const Popup = ({ fields, name }) => {
+export const Popup = ({ fields, name, description }) => {
   return (
-    <LeafletPopup maxWidth={444} maxHeight={444}>
-      <div>
-        <h1>{name}</h1>
-        {fields &&
-          fields.map((field, index) => (
-            <GetFieldByProperty key={`${index}-${field.name}`} {...field} />
-          ))}
+    <LeafletPopup className={styles.popup} maxWidth={400}>
+      <div className={styles.popupContainer}>
+        <div className={styles.popupHeader}>
+          <div className={styles.name}>{name}</div>
+          <div className={styles.description}>{description}</div>
+        </div>
+        <div className={styles.fieldsContainer}>
+          {fields &&
+            fields.map((field, index) => (
+              <GetFieldByProperty key={`${index}-${field.name}`} {...field} />
+            ))}
+        </div>
       </div>
     </LeafletPopup>
   );

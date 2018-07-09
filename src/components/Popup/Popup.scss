@@ -1,0 +1,29 @@
+.popup {
+  width: 400px;
+}
+
+.popupContainer {
+  width: 100%;
+}
+
+.popupHeader {
+  padding: 0 10px;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.description {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.fieldsContainer {
+  padding: 10px;
+  margin: 10px 0;
+  border-top: 1px solid #DEDEDE;
+  border-bottom: 1px solid #DEDEDE;
+}
