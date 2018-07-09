@@ -109,6 +109,9 @@
     z-index: 800;
     pointer-events: visiblePainted; /* IE 9-10 doesn't have auto */
     pointer-events: auto;
+    a[title="A JS library for interactive maps"] {
+      display: none;
+    }
   }
   .leaflet-top,
   .leaflet-bottom {
